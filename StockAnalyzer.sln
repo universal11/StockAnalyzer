@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockAnalyzer", "StockAnalyzer\StockAnalyzer.csproj", "{75E933B5-4944-4834-AABF-8B60D61C364F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75E933B5-4944-4834-AABF-8B60D61C364F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E933B5-4944-4834-AABF-8B60D61C364F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E933B5-4944-4834-AABF-8B60D61C364F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E933B5-4944-4834-AABF-8B60D61C364F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C0146E7-762C-4F3F-9E3E-6F5256370406}
+	EndGlobalSection
+EndGlobal
