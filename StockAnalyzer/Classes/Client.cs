@@ -12,16 +12,30 @@ namespace StockAnalyzer.Classes
     {
 
         public static List<StockDate> getStockDates(List<StockListItem> stockListItems) {
-            //IDictionary<string, int> dict = new Dictionary<string, int>();
+            IDictionary<int, Dictionary<int, StockDate>> dates = new Dictionary<int, Dictionary<int, StockDate>>();
             List<StockDate> stockDates = new List<StockDate>();
             foreach(StockListItem stockListItem in stockListItems) {
+               
                 StockDate stockDate = new StockDate();
                 stockDate.month = stockListItem.dateTime.Month;
                 stockDate.day = stockListItem.dateTime.Day;
-                stockDates.Add(stockDate);
+                if(!dates.ContainsKey(stockDate.month))
+                {
+                    dates[stockDate.month] = new Dictionary<int, StockDate>();
+                }
+
+                if(!dates[stockDate.month].ContainsKey(stockDate.day)) {
+                    dates[stockDate.month][stockDate.day] = stockDate;
+                }
             }
-            return stockDates;
-            //return stockDates.GroupBy(sd=> new { sd.month, sd.day }).ToList().OrderBy(sd=>sd.month).ThenBy(sd=>sd.day).ToList();
+
+            foreach(KeyValuePair<int, Dictionary<int, StockDate>> month in dates) {
+                foreach(KeyValuePair<int, StockDate> date in month.Value) {
+                    stockDates.Add(date.Value);
+                }
+            }
+
+            return stockDates.OrderBy(sd=>sd.month).ThenBy(sd=>sd.day).ToList();
         }
 
         public static List<StockListItem> getStockListItems() {
