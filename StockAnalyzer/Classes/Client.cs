@@ -11,14 +11,16 @@ namespace StockAnalyzer.Classes
     public class Client
     {
 
-        public static List<StockDate> getStockDates(List<StockListItem> stockListItems) {
-            IDictionary<int, Dictionary<int, StockDate>> dates = new Dictionary<int, Dictionary<int, StockDate>>();
-            List<StockDate> stockDates = new List<StockDate>();
+        public static Dictionary<int, Dictionary<int, StockDate>> getUniqueStockDates(List<StockListItem> stockListItems) {
+            Dictionary<int, Dictionary<int, StockDate>> dates = new Dictionary<int, Dictionary<int, StockDate>>();
+            
             foreach(StockListItem stockListItem in stockListItems) {
-               
+                StockDate stockDate = stockListItem.getStockDate();
+                /*
                 StockDate stockDate = new StockDate();
                 stockDate.month = stockListItem.dateTime.Month;
                 stockDate.day = stockListItem.dateTime.Day;
+                */
                 if(!dates.ContainsKey(stockDate.month))
                 {
                     dates[stockDate.month] = new Dictionary<int, StockDate>();
@@ -29,17 +31,26 @@ namespace StockAnalyzer.Classes
                 }
             }
 
-            foreach(KeyValuePair<int, Dictionary<int, StockDate>> month in dates) {
-                foreach(KeyValuePair<int, StockDate> date in month.Value) {
+            return dates;
+        }
+
+        
+        public static List<StockDate> getSortedStockDates(Dictionary<int, Dictionary<int, StockDate>> dates) {
+            List<StockDate> stockDates = new List<StockDate>();
+            foreach(KeyValuePair<int, Dictionary<int, StockDate>> month in dates)
+            {
+                foreach(KeyValuePair<int, StockDate> date in month.Value)
+                {
                     stockDates.Add(date.Value);
                 }
             }
 
-            return stockDates.OrderBy(sd=>sd.month).ThenBy(sd=>sd.day).ToList();
+            return stockDates.OrderBy(sd => sd.month).ThenBy(sd => sd.day).ToList();
         }
+        
 
         public static List<StockListItem> getStockListItems() {
-            string url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=IO5GL7XPD3B40CDZ&outputsize=full";
+            string url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=IO5GL7XPD3B40CDZ&outputsize=full";
 
             HttpClient client = new HttpClient();
             HttpResponseMessage response = null;

@@ -14,16 +14,37 @@ namespace StockAnalyzer
         static void Main(string[] args)
         {
             List<StockListItem> stockListItems = Client.getStockListItems();
+            Dictionary<int, Dictionary<int, StockDate>> dates = Client.getUniqueStockDates(stockListItems);//.ToDictionary(sd=>sd, x=>true);
 
-            /*
+
+            
             foreach(StockListItem stockListItem in stockListItems) {
-                System.Console.WriteLine($"Year: {stockListItem.dateTime.Year} | Date: {stockListItem.dateTime.ToShortDateString()} | Open: {stockListItem.open} | Close: {stockListItem.close} | High: {stockListItem.high} | Low: {stockListItem.low} | Volume: {stockListItem.volume}");
+                StockDate stockDate = stockListItem.getStockDate();
+                if(dates[stockDate.month][stockDate.day] != null) {
+                    if(!stockListItem.isProfit())
+                    {
+                        System.Console.WriteLine($"No Profit | Month: {dates[stockDate.month][stockDate.day].month} | Day: {dates[stockDate.month][stockDate.day].day} | Year: {dates[stockDate.month][stockDate.day].year} | Open: {stockListItem.open} | Close: {stockListItem.close}");
+                        dates[stockDate.month][stockDate.day] = null;
+                        
+                    }
+                }
+                
             }
-            */
 
-            foreach(StockDate stockDate in Client.getStockDates(stockListItems)) {
-                System.Console.WriteLine($"Month: {stockDate.month} | Day: {stockDate.day}");
+            foreach(KeyValuePair<int, Dictionary<int, StockDate>> month in dates)
+            {
+                foreach(KeyValuePair<int, StockDate> date in month.Value)
+                {
+                    if(date.Value != null) {
+                    
+                        System.Console.WriteLine($"Month: {date.Value.month} | Day: {date.Value.day}");
+                    }
+                    
+                }
             }
+
+
+            System.Console.WriteLine("Complete!");
 
             System.Console.ReadKey();
         }
