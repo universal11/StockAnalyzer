@@ -8,6 +8,7 @@ namespace StockAnalyzer.Classes
 {
     public class StockListItem
     {
+
         public DateTime dateTime { get; set; }
         public decimal open { get; set; }
         public decimal close { get; set; }
@@ -17,6 +18,10 @@ namespace StockAnalyzer.Classes
 
         public bool isProfit() {
             return ( this.close > this.open );
+        }
+
+        public decimal getChange() {
+            return (this.close - open);
         }
 
         public StockDate getStockDate() {

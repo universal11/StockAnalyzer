@@ -11,8 +11,8 @@ namespace StockAnalyzer.Classes
     public class Client
     {
 
-        public static Dictionary<int, Dictionary<int, StockDate>> getUniqueStockDates(List<StockListItem> stockListItems) {
-            Dictionary<int, Dictionary<int, StockDate>> dates = new Dictionary<int, Dictionary<int, StockDate>>();
+        public static Dictionary<int, Dictionary<int, List<StockListItem>>> getUniqueStockDates(List<StockListItem> stockListItems) {
+            Dictionary<int, Dictionary<int, List<StockListItem>>> dates = new Dictionary<int, Dictionary<int, List<StockListItem>>>();
             
             foreach(StockListItem stockListItem in stockListItems) {
                 StockDate stockDate = stockListItem.getStockDate();
@@ -23,12 +23,13 @@ namespace StockAnalyzer.Classes
                 */
                 if(!dates.ContainsKey(stockDate.month))
                 {
-                    dates[stockDate.month] = new Dictionary<int, StockDate>();
+                    dates[stockDate.month] = new Dictionary<int, List<StockListItem>>();
                 }
 
                 if(!dates[stockDate.month].ContainsKey(stockDate.day)) {
-                    dates[stockDate.month][stockDate.day] = stockDate;
+                    dates[stockDate.month][stockDate.day] = new List<StockListItem>();
                 }
+                dates[stockDate.month][stockDate.day].Add(stockListItem);
             }
 
             return dates;
@@ -49,8 +50,8 @@ namespace StockAnalyzer.Classes
         }
         
 
-        public static List<StockListItem> getStockListItems() {
-            string url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=IO5GL7XPD3B40CDZ&outputsize=full";
+        public static List<StockListItem> getStockListItems(string symbol) {
+            string url = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey=IO5GL7XPD3B40CDZ&outputsize=full";
 
             HttpClient client = new HttpClient();
             HttpResponseMessage response = null;
@@ -60,6 +61,10 @@ namespace StockAnalyzer.Classes
                 response = client.GetAsync(url).Result;
                 JToken token = JObject.Parse(response.Content.ReadAsStringAsync().Result);
                 token = token.SelectToken("['Time Series (Daily)']");
+                if(token == null) {
+                    System.Console.WriteLine($"Error Analyzing: {symbol}: {response.Content.ReadAsStringAsync().Result}");
+                    return stockListItems;
+                }
                 foreach(var record in (JObject)token)
                 {
                     JToken data = record.Value;
